@@ -1,0 +1,34 @@
+# Archivo de configuración de Nginx
+
+# Cambia el nombre del servidor
+server_name mi-sitio.com;
+
+# Establece la carpeta de documentos de tu sitio web
+root /var/www/mi-sitio.com/html;
+
+# Establece el índice predeterminado
+index index.html index.php;
+
+# Procesa archivos PHP con PHP-FPM
+location ~ \.php$ {
+    include snippets/fastcgi-php.conf;
+    fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
+}
+
+# Protege la carpeta de administración de tu sitio web con contraseña
+location /admin {
+    auth_basic "Acceso restringido";
+    auth_basic_user_file /etc/nginx/.htpasswd;
+}
+
+# Redirige todas las solicitudes no encontradas a una página de error 404 personalizada
+error_page 404 /404.html;
+location = /404.html {
+    root /var/www/mi-sitio.com/html;
+}
+
+# Redirige todas las solicitudes no encontradas a una página de error 404 personalizada
+error_page 500 502 503 504 /50x.html;
+location = /50x.html {
+    root /var/www/mi-sitio.com/html;
+}
